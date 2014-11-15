@@ -17,4 +17,8 @@ object Application extends Controller {
     MyWebSocketActor.props(out)
   }
 
+  def chat = Action { implicit request =>
+    Ok(views.html.chat())
+  }
+
 }

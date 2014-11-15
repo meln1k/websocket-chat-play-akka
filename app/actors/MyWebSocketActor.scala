@@ -9,6 +9,6 @@ object MyWebSocketActor {
 class MyWebSocketActor(out: ActorRef) extends Actor {
   def receive = {
     case msg: String =>
-      out ! ("I received your message!!!!1111: " + msg)
+      out ! ("I received your message!: " + msg)
   }
 }
