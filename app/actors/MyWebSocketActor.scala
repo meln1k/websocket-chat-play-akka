@@ -1,14 +1,16 @@
 package actors
 
 import akka.actor._
+import Messages._
 
 object MyWebSocketActor {
-  def props(out: ActorRef) = Props(new MyWebSocketActor(out))
+  def props(out: ActorRef, room: ActorRef) = Props(new MyWebSocketActor(out, room))
 }
 
-class MyWebSocketActor(out: ActorRef) extends Actor {
+class MyWebSocketActor(out: ActorRef, room: ActorRef) extends Actor {
+  room ! InviteRequest
   def receive = {
-    case msg: String =>
-      out ! ("I received your message!: " + msg)
+    case msg: String => room ! ChatMessage(msg)
+    case ChatMessage(text) => out ! text
   }
 }

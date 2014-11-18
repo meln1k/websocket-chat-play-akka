@@ -8,13 +8,8 @@ import actors._
 
 object Application extends Controller {
 
-  def index = Action {
-    Ok(views.html.index("Your new application is ready."))
-  }
-
-
   def socket = WebSocket.acceptWithActor[String, String] { request => out =>
-    MyWebSocketActor.props(out)
+    MyWebSocketActor.props(out, ChatActorSystem.room)
   }
 
   def chat = Action { implicit request =>
