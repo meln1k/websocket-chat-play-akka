@@ -9,7 +9,7 @@ import actors._
 object Application extends Controller {
 
   def socket = WebSocket.acceptWithActor[String, String] { request => out =>
-    MyWebSocketActor.props(out, ChatActorSystem.room)
+    UserSession.props(out, ChatActorSystem.room)
   }
 
   def chat = Action { implicit request =>

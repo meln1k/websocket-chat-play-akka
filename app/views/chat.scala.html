@@ -36,7 +36,7 @@ function onClose ( evt ) {
 }
 
 function onMessage ( evt ) {
-    writeToScreen ( '<span style="color: blue;">RESPONSE: ' + evt.data + '</span>' );
+    writeToScreen ( '<span style="color: blue;">' + evt.data + '</span>' );
 }
 
 function onError ( evt ) {
@@ -44,7 +44,6 @@ function onError ( evt ) {
 }
 
 function doSend ( message ) {
-    writeToScreen ( "SENT: " + message );
     websocket.send ( message );
 }
 
