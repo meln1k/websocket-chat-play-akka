@@ -4,7 +4,6 @@
 
 # Home page
 GET        /                    controllers.Application.chat
-GET        /chat                controllers.Application.chat
 
 GET        /ws                  controllers.Application.socket
 
