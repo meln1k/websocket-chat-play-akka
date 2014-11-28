@@ -5,12 +5,15 @@ websocket = new WebSocket(wsUri);
 function ChatCtrl($scope) {
     $scope.messages = [];
     $scope.sendMessage = function () {
-        websocket.send($scope.messageText);
+        websocket.send(angular.toJson({
+            "messageText":$scope.messageText
+        }));
         $scope.messageText = "";
     };
 
     websocket.onmessage = function (e) {
-        $scope.messages.push(e.data);
+        var message = angular.fromJson(e.data);
+        $scope.messages.push(message.time, message.from, message.messageText);
         $scope.$apply();
     };
 }
