@@ -13,7 +13,9 @@ function ChatCtrl($scope) {
 
     websocket.onmessage = function (e) {
         var message = angular.fromJson(e.data);
-        $scope.messages.push(message.time, message.from, message.messageText);
+        $scope.messages.push(message);
         $scope.$apply();
+        var chatWindow = $("#chat-window")
+        chatWindow.scrollTop(chatWindow[0].scrollHeight);
     };
 }
