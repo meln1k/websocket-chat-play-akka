@@ -20,7 +20,7 @@ class Room extends Actor with ActorLogging {
     } else {
       sessions += name -> sender
       sender ! InviteAccepted(name)
-      sendAll(Broadcast(name))
+      sendAll(Broadcast(s"User $name joined"))
     }
   }
 

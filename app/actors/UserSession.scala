@@ -28,14 +28,14 @@ class UserSession(out: ActorRef, room: ActorRef) extends Actor with ActorLogging
 
   def requestNewName(name: String) = room ! InviteRequest(name)
   def send2Room(msg: String) = room ! ChatMessage(userName, msg)
-  def send2Out(msg: String, from: Option[String] = None) = out ! OutMsg(currentTime, from.getOrElse("system"), msg)
+  def send2Out(msg: String, from: Option[String] = None) = out ! OutMsg(currentTime, from.getOrElse("toAll"), msg)
   def setName(name: String) = {
     userName = name
-    send2Out("welcome")
+    send2Out("welcome", Some("system"))
   }
 
   val formatter = DateTimeFormat.forPattern("HH:mm:ss").withLocale(Locale.US)
   def currentTime = DateTime.now().toString(formatter)
   
-  override def postStop() = room ! Unsubscribe
+  override def postStop() = room ! Unsubscribe(userName)
 }
