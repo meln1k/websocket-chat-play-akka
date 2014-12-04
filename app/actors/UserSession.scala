@@ -14,7 +14,7 @@ object UserSession {
 
 class UserSession(out: ActorRef, room: ActorRef) extends Actor with ActorLogging {
   
-  var userName = ""
+  var userName: Option[String] = None
 
   def receive = {
     case InMsg(SendMessage, text) => send2Room(text)
@@ -27,15 +27,15 @@ class UserSession(out: ActorRef, room: ActorRef) extends Actor with ActorLogging
   }
 
   def requestNewName(name: String) = room ! InviteRequest(name)
-  def send2Room(msg: String) = room ! ChatMessage(userName, msg)
+  def send2Room(msg: String) = userName.map(name => room ! ChatMessage(name, msg))
   def send2Out(msg: String, from: Option[String] = None) = out ! OutMsg(currentTime, from.getOrElse("toAll"), msg)
   def setName(name: String) = {
-    userName = name
+    userName = Some(name)
     send2Out("welcome", Some("system"))
   }
 
   val formatter = DateTimeFormat.forPattern("HH:mm:ss").withLocale(Locale.US)
   def currentTime = DateTime.now().toString(formatter)
   
-  override def postStop() = room ! Unsubscribe(userName)
+  override def postStop() = userName.map(name => room ! Unsubscribe(name))
 }

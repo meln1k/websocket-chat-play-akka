@@ -17,24 +17,29 @@ angular.module('chatApp', [])
             $scope.messageText = "";
         };
         $scope.sendName = function () {
-            websocket.send(angular.toJson({
-                "messageType": 0,
-                "messageText":$scope.name
-            }));
+            if (!$scope.registered) {
+                websocket.send(angular.toJson({
+                    "messageType": 0,
+                    "messageText": $scope.name
+                }));
+            }
         };
 
         websocket.onmessage = function (e) {
             var msg = angular.fromJson(e.data);
             console.log(e.data);
-            switch (msg.from) {
-                case "system":
-                    handleSystemMsg(msg.messageText);
-                    break;
+            if (!$scope.registered) {
+                switch (msg.from) {
+                    case "system":
+                        handleSystemMsg(msg.messageText);
+                        break;
+                }
+            } else {
+                $scope.messages.push(msg);
+                $scope.$apply();
+                var chatWindow = $("#chat-window");
+                chatWindow.scrollTop(chatWindow[0].scrollHeight);
             }
-            $scope.messages.push(msg);
-            $scope.$apply();
-            var chatWindow = $("#chat-window");
-            chatWindow.scrollTop(chatWindow[0].scrollHeight);
         };
 
         function handleSystemMsg(msg) {
