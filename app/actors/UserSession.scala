@@ -26,7 +26,7 @@ class UserSession(out: ActorRef, room: ActorRef) extends Actor with ActorLogging
     case unhandled => log.warning(s"Unhandled message: ${unhandled.toString}")
   }
 
-  def requestNewName(name: String) = room ! InviteRequest(name)
+  def requestNewName(name: String) = if (userName.isEmpty) room ! InviteRequest(name)
   def send2Room(msg: String) = userName.map(name => room ! ChatMessage(name, msg))
   def send2Out(msg: String, from: Option[String] = None) = out ! OutMsg(currentTime, from.getOrElse("toAll"), msg)
   def setName(name: String) = {
