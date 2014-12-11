@@ -9,7 +9,7 @@ import org.joda.time.format.DateTimeFormat
 import Constants._
 
 object UserSession {
-  def props(out: ActorRef, room: ActorRef) = Props(new UserSession(out, room))
+  def props(out: ActorRef, room: ActorRef) = Props(classOf[UserSession], out, room)
 }
 
 class UserSession(out: ActorRef, room: ActorRef) extends Actor with ActorLogging {
