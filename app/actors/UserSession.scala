@@ -20,14 +20,14 @@ class UserSession(out: ActorRef, room: ActorRef) extends Actor with ActorLogging
     case InMsg(SendMessage, text) => send2Room(text)
     case InMsg(SetName, userName) => requestNewName(userName)
     case InviteAccepted(name) => setName(name)
-    case InviteDenied => send2Out(s"taken")
+    case InviteDenied => send2Out("taken", Some("system"))
     case ChatMessage(name, text) => send2Out(text, Some(name))
     case Broadcast(text) => send2Out(text)
     case unhandled => log.warning(s"Unhandled message: ${unhandled.toString}")
   }
 
   def requestNewName(name: String) = if (userName.isEmpty) room ! InviteRequest(name)
-  def send2Room(msg: String) = userName.map(name => room ! ChatMessage(name, msg))
+  def send2Room(msg: String) = userName.foreach(name => room ! ChatMessage(name, msg))
   def send2Out(msg: String, from: Option[String] = None) = out ! OutMsg(currentTime, from.getOrElse("toAll"), msg)
   def setName(name: String) = {
     userName = Some(name)
